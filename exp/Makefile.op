@@ -1,0 +1,9 @@
+CC= gcc
+SRC = exp_op.c
+INCLUDE= -I. -I../mystring -I../myfloat -I../mydouble -I../mystring -I../error -I../myint -I../token -I../stack -I../data -I../fun -I../arg -I../utils -I../lval -I../global -I../hash -I../scope
+CFLAGS = -c -Wall -g  $(INCLUDE)
+
+obj: $(SRC)
+	$(CC) $(CFLAGS) $^
+clean:
+	rm -f *.o *~

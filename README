@@ -1,0 +1,6 @@
+A simple interpreter that supports functions, loops and various other constructs.
+It was written by me in 2001 as a hobby project.
+Refer to test_file1.h and test_file.h for an example
+
+-Karthick
+(a.r.karthick@gmail.com)
