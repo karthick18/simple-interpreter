@@ -289,18 +289,41 @@ d=sprintf('%s,',"karthick","checkout");
 
 printf("Null Return returns a zero Object =%d\n",for_loop());
 
+printf("\nFibonacci series for n=15 follows\n");
 
+fib(15);
 
-
-
-
-
-
-
-
-
-
-
-
+fun fib(n)
+{
+    if(n <= 0)
+    {
+        return;
+    }
+    a = 0; 
+    b = 1;
+    printf("%d", a);
+    if(n == 1)
+    {
+        printf("\n");
+        return;
+    }
+    printf(" %d", b);
+    if(n == 2)
+    {
+        printf("\n");
+        return;
+    }
+    n = n-2;
+    while(n > 0)
+    {
+        z = a+b;
+        printf(" %d", z);
+        a = b;
+        b = z;
+        n = n - 1;
+    }
+    printf("\n");
+    return;
+}
 
 

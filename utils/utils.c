@@ -68,78 +68,20 @@ struct intern *lookup_intern(char *keyword) {
     
 }    
 
-char *initialise(int argc,char *argv[]){
-
- if(argc != 2) 
-  {
-  err(0,"Insufficient Arguments:");
-
-  return (char*) NULL;
-
-  }
-
- {
- 
-  char *filename = argv[1]; //get the filename
-
-  return read_file(filename); //read the data in the filename and return the data
-
- 
- }
-
+char *initialise(int argc,char *argv[])
+{
+    char *filename = NULL;
+    if(argc != 1 && argc != 2)
+    {
+        err(0,"Insufficient Arguments:");
+        return NULL;
+    }
+    if(argc == 2) 
+    {
+        filename = argv[1];
+    }
+    return read_file(filename); //read the data in the filename and return the data
 }
-
-/*Buggy read file.Will fail if realloc shifts the boundary*/
-
-/*
-char *read_file(char *filename) {
-
- int fd;
-
- char *start = (char*)NULL;
-
- char *data=start;
-
- unsigned int nbytes,total=0;
- 
- fd = open(filename,O_RDONLY );
-
- if (fd < 0 ) {
- 
-   close(fd);
-
-   return (char *) data; 
-
- }
-
- start = malloc(BUFFER+1);
- 
- if(! start) return data;
- 
- data=start;
-   
- while( (nbytes = read(fd,data,BUFFER) ) > 0){
-
-    //reallocate
-
-    total += nbytes;
-
-    start = realloc(start,total+BUFFER);
-
-    if (! start) return start;
-
-    data=start+total;
-
- }
-
-  data[0] = 0; 
-
-  close(fd);
-
-  return start;
-   
-}       
-*/
 
 void err(int down,char *fmt,...){
  
@@ -227,53 +169,48 @@ int my_atoi(char *s) {
 }
  
   
-
 char *read_file(char *filename) {
 
- int fd;
+    int fd = 0; /*std input by default */
 
- char *start = (char*)NULL;
+    char *start = NULL;
 
- char *data=start;
+    unsigned int blocks = 1, nbytes = 0, total_read = 0;
 
- unsigned int nbytes,total;
+    unsigned int block_size = BUFFER;
 
- fd = open(filename,O_RDONLY );
+    if(filename)
+    {
+        fd = open(filename, O_RDONLY );
 
- if (fd < 0 ) {
+        if (fd < 0 ) 
+        {
+            return NULL;
+        }
+    }
+
+    start = malloc(blocks * block_size + 1);
  
-   close(fd);
-
-   return (char *) data; 
-
- }
-
- total=lseek(fd,0,SEEK_END); //seek to the end of the file
-
- start = malloc(total+3);
+    if(! start) goto out_close;
  
- if(! start) return data;
- 
- data=start;
-
- lseek(fd,0,SEEK_SET);
-
- err(0,"Reading File %s",filename);
+    err(0, "Reading File %s",filename ? filename : "null");
    
- while( (nbytes = read(fd,data,BUFFER) ) > 0){
+    while( (nbytes = read(fd, start + total_read, block_size) ) > 0){
+        total_read += nbytes;
+        ++blocks;
+        start = realloc(start, blocks * block_size + 1);
+        if(!start) 
+            goto out_close;
+    }
+    
+    start[total_read] = 0;
 
-   data+=nbytes;
+    out_close:
+    if(fd > 0)
+        close(fd);
 
- }
-
-  data[0] = 0; 
-
-  close(fd);
-
-  return start;
-   
+    return start;
 }       
-
 
 int examine_token(void) {
 

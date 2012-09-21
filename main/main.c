@@ -24,32 +24,32 @@ void parse_global_scope();
 int main(int argc,char *argv[]) {
 
     program = initialise(argc,argv);
-  if(!program) {
-    err(1,"Terminating the program:\n");
-  }
+    if(!program) {
+        err(1,"Terminating the program:\n");
+    }
 
-  reference = program ; //set up the global reference pointer for the program
+    reference = program ; //set up the global reference pointer for the program
   
-  initialise_scopes();
-  register_all_scopes(); //register all the scopes
+    initialise_scopes();
+    register_all_scopes(); //register all the scopes
   
-  initialise_datatypes(); //initialise the data types
-  register_all_datatypes(); //set up the data type handlers
-  stack_initialise();   //set up the stack
+    initialise_datatypes(); //initialise the data types
+    register_all_datatypes(); //set up the data type handlers
+    stack_initialise();   //set up the stack
 
-  lval_initialise(); //initialise the lvalue handler
+    lval_initialise(); //initialise the lvalue handler
 
-  function_precursor(); //call function precursor to load functions
+    function_precursor(); //call function precursor to load functions
 
-  reference = program;
+    reference = program;
 
-  parse_global_scope();
+    parse_global_scope();
 
-  main_free(); //free up the memory
+    main_free(); //free up the memory
  
-  exit(0);
+    exit(0);
 
- }
+}
 
 void parse_global_scope() {
   
