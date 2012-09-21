@@ -151,8 +151,3 @@ void lval_install(unsigned long lookup_stop,int scope) {
 
 }
 
-     
-
-
-
-

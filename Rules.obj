@@ -1,0 +1,6 @@
+all:objs
+
+clean:
+	$(call CLEAN_CMD)
+
+include ../Rules.inc

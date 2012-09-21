@@ -19,7 +19,7 @@
 
 #define KB  1024
 
-#define POINTER_LEN 0x4 //the length of the pointer is 32 bits for 4 byte machines
+#define POINTER_LEN (sizeof(unsigned long)) //the length of the pointer is 32 bits for 4 byte machines
 
 /* Set up the stack top for a 8kb stack : 2048 stack nodes for a 8 KB stack,each holding 4 byte addresses.*/
 

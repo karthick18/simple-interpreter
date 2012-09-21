@@ -237,7 +237,7 @@ char *read_file(char *filename) {
  char *data=start;
 
  unsigned int nbytes,total;
- 
+
  fd = open(filename,O_RDONLY );
 
  if (fd < 0 ) {

@@ -7,7 +7,7 @@ for(i=0;i < 5; i=i+1) {
   for(j=0; j < 2; j=j+1) {
    s = 'karthick' + 'checkout' + ' ' + i + ':' + j;
    res=sprint("%s\n",sprintf("%.20s",global_fact) + sprintf("%20.20s\n",s) );
-   print("%s",res);
+   printf("Res=%s\n",res);
  }
 
 }
