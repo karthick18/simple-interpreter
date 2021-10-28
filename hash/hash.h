@@ -3,6 +3,6 @@
 
 #define HASH_SIZE 101
 
-unsigned int make_hash(unsigned char *key);
+unsigned int make_hash (unsigned char *key);
 
 #endif

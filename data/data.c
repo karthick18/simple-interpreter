@@ -36,301 +36,316 @@ struct data_operations data_operations[DATA_TYPES];
 
 /*Make a copy of the data object*/
 
-struct data *copy_data(struct data *ptr,int sign){
+struct data *
+copy_data (struct data *ptr, int sign)
+{
 
   struct data *cp = MALLOC_DATA;
-  if(!cp ) {
-    SET_ERROR(MEM_ERROR);
-  }
 
-
-  if(ptr ) {
-
-    switch(ptr->ele_type ) {
-
-    case _INT:
-      cp->ele_type = _INT;
-
-      cp->INT_PTR = INSTALL_INT(ptr->INT_VALUE * sign);
-      break;
- 
-    case _STR:
-      cp->ele_type = _STR;
-      cp->STR_PTR = INSTALL_STRING(ptr->STR_VALUE);
-      break;
-
-    case _FLT:
-      cp->ele_type = _FLT;
-      cp->FLT_PTR = INSTALL_FLOAT(ptr->FLT_VALUE*sign);
-      break;
-
-    case _DBL:
-      cp->ele_type = _DBL;
-      cp->DBL_PTR = INSTALL_DOUBLE(ptr->DBL_VALUE*sign);
-      break;
- 
-    default:
-      free((void*)cp);
-      SET_ERROR(UNKNOWN_DATATYPE);
-      
+  if (!cp)
+    {
+      SET_ERROR (MEM_ERROR);
     }
 
-  }
+
+  if (ptr)
+    {
+
+      switch (ptr->ele_type)
+	{
+
+	case _INT:
+	  cp->ele_type = _INT;
+
+	  cp->INT_PTR = INSTALL_INT (ptr->INT_VALUE * sign);
+	  break;
+
+	case _STR:
+	  cp->ele_type = _STR;
+	  cp->STR_PTR = INSTALL_STRING (ptr->STR_VALUE);
+	  break;
+
+	case _FLT:
+	  cp->ele_type = _FLT;
+	  cp->FLT_PTR = INSTALL_FLOAT (ptr->FLT_VALUE * sign);
+	  break;
+
+	case _DBL:
+	  cp->ele_type = _DBL;
+	  cp->DBL_PTR = INSTALL_DOUBLE (ptr->DBL_VALUE * sign);
+	  break;
+
+	default:
+	  free ((void *) cp);
+	  SET_ERROR (UNKNOWN_DATATYPE);
+
+	}
+
+    }
 
   return cp;
 
 }
-    
+
 /* The install routine that installs a particular data type*/
 
-struct data *install_data(struct data *ptr,char *value) {
+struct data *
+install_data (struct data *ptr, char *value)
+{
 
   /* Call the corresponding install of the data type and return a pointer to the data type */
 
-  switch(ptr->ele_type ) {
+  switch (ptr->ele_type)
+    {
 
-  case _INT: //integer
+    case _INT:			//integer
 
-    ptr->INT_PTR = INSTALL_INT(my_atoi(value)); 
+      ptr->INT_PTR = INSTALL_INT (my_atoi (value));
 
-    break;
+      break;
 
-  case _FLT: //float
+    case _FLT:			//float
 
-    ptr->FLT_PTR = INSTALL_FLOAT(atof(value));
+      ptr->FLT_PTR = INSTALL_FLOAT (atof (value));
 
-    break;
+      break;
 
-  case _DBL:
+    case _DBL:
 
-    ptr->DBL_PTR = INSTALL_DOUBLE(atof(value));
+      ptr->DBL_PTR = INSTALL_DOUBLE (atof (value));
 
-    break;
+      break;
 
-  case _STR:
+    case _STR:
 
-    ptr->STR_PTR =  INSTALL_STRING(value); 
+      ptr->STR_PTR = INSTALL_STRING (value);
 
-    break;
+      break;
 
-  default :
+    default:
 
-    err_type = UNKNOWN_DATATYPE;
+      err_type = UNKNOWN_DATATYPE;
 
-    error();
+      error ();
 
-  } //switch
+    }				//switch
 
 
-  return ptr; //return a pointer to the data type after installing the data
+  return ptr;			//return a pointer to the data type after installing the data
 
 }
 
-       
+
 
 /* The operation should be determined for objects through an abstract interface.*/
 
-struct data *operate_data(struct data *a,struct data *b,int op) {
+struct data *
+operate_data (struct data *a, struct data *b, int op)
+{
 
   struct data *ptr = (struct data *) NULL;
 
   struct data_operations *dptr;
 
-  DataType dt = a->ele_type; //get the element type
+  DataType dt = a->ele_type;	//get the element type
 
-  CHECK_DPTR(dptr,dt);
+  CHECK_DPTR (dptr, dt);
 
-  switch(op) {
+  switch (op)
+    {
 
-  case PLUS :
+    case PLUS:
 
-    if(dptr->op_ptr->add_op) 
-  
-     ptr = dptr->op_ptr->add_op(a,b);
-      
-     break;
+      if (dptr->op_ptr->add_op)
+	ptr = dptr->op_ptr->add_op (a, b);
 
-  case MINUS :
+      break;
 
-    if(dptr->op_ptr->sub_op)
- 
-     ptr = dptr->op_ptr->sub_op(a,b);
+    case MINUS:
 
-    break;
+      if (dptr->op_ptr->sub_op)
+	ptr = dptr->op_ptr->sub_op (a, b);
 
-  case MULTIPLY :
+      break;
 
-    if (dptr->op_ptr->mul_op)
- 
-     ptr = dptr->op_ptr->mul_op(a,b);
+    case MULTIPLY:
 
-    break;
+      if (dptr->op_ptr->mul_op)
+	ptr = dptr->op_ptr->mul_op (a, b);
 
-  case DIVIDE:
+      break;
 
-    if(dptr->op_ptr->div_op) 
- 
-     ptr = dptr->op_ptr->div_op(a,b);
+    case DIVIDE:
 
-    break;
- 
-  case RS :
+      if (dptr->op_ptr->div_op)
+	ptr = dptr->op_ptr->div_op (a, b);
 
-  case LS :
-        
-  case LT :
+      break;
 
-  case GT :
- 
-  case LTE:
+    case RS:
 
-  case GTE:
+    case LS:
 
-  case EE:
+    case LT:
 
-  case NE:
+    case GT:
 
-  case LOGICAL_AND:
+    case LTE:
 
-  case LOGICAL_OR:
-  
-    if(dptr->op_ptr->compare_op)
- 
-     ptr = dptr->op_ptr->compare_op(a,b,op);
+    case GTE:
 
-    break;
+    case EE:
 
-  case BITWISE_AND :
+    case NE:
 
-  case BITWISE_XOR :
- 
-  case BITWISE_OR  :
- 
-    if(dptr->op_ptr->bit_op) 
- 
-     ptr = dptr->op_ptr->bit_op(a,b,op);
+    case LOGICAL_AND:
 
-    break;
+    case LOGICAL_OR:
+
+      if (dptr->op_ptr->compare_op)
+	ptr = dptr->op_ptr->compare_op (a, b, op);
+
+      break;
+
+    case BITWISE_AND:
+
+    case BITWISE_XOR:
+
+    case BITWISE_OR:
+
+      if (dptr->op_ptr->bit_op)
+	ptr = dptr->op_ptr->bit_op (a, b, op);
+
+      break;
 
 
-  case LOGICAL_NOT:
+    case LOGICAL_NOT:
 
-    if(dptr->op_ptr->not_op)
+      if (dptr->op_ptr->not_op)
+	ptr = dptr->op_ptr->not_op (a);
 
-      ptr = dptr->op_ptr->not_op(a);
- 
-    break;
+      break;
 
-  case ONES_COMPLEMENT:
+    case ONES_COMPLEMENT:
 
-    if(dptr->op_ptr->ones_complement)
-      ptr = dptr->op_ptr->ones_complement(a);
- 
-    break;
-    
-  default:
+      if (dptr->op_ptr->ones_complement)
+	ptr = dptr->op_ptr->ones_complement (a);
 
-    err_type = BAD_OPERATOR;
+      break;
 
-    error();
+    default:
 
-  }   
- 
-  if(! ptr) {
+      err_type = BAD_OPERATOR;
 
-    err_type = OPERATION_NOT_SUPPORTED;
+      error ();
 
-    error();
+    }
 
-  }
-    
+  if (!ptr)
+    {
+
+      err_type = OPERATION_NOT_SUPPORTED;
+
+      error ();
+
+    }
+
   return ptr;
 
- 
-} //end routine       
+
+}				//end routine       
 
 
 /* Remove a data that is installed. Should be called after an expression parser finishes,and on a function epilogue,for clearing up the stack.*/
 
-void deinstall_data(struct data *ptr) {
+void
+deinstall_data (struct data *ptr)
+{
 
-  if( ptr) {
+  if (ptr)
+    {
 
-  switch (ptr->ele_type ) {
+      switch (ptr->ele_type)
+	{
 
-  case _INT:
+	case _INT:
 
-    deinstall_int(ptr);
+	  deinstall_int (ptr);
 
-    break;
+	  break;
 
-  case _FLT:
+	case _FLT:
 
-    deinstall_float(ptr); 
+	  deinstall_float (ptr);
 
-    break;
+	  break;
 
-  case _DBL:
+	case _DBL:
 
-    deinstall_double(ptr);
+	  deinstall_double (ptr);
 
-    break;
+	  break;
 
-  case _STR:
+	case _STR:
 
-    deinstall_string(ptr);
+	  deinstall_string (ptr);
 
-    break;
+	  break;
 
-  default:
+	default:
 
-    err_type = UNKNOWN_DATATYPE;
+	  err_type = UNKNOWN_DATATYPE;
 
-    error();
+	  error ();
 
-  } //end switch
+	}			//end switch
 
-  
-  free((void*) ptr); //free up the data 
+
+      free ((void *) ptr);	//free up the data 
+
+    }
+
+  return;
 
 }
 
-  return ;
 
-} 
+void
+check_data (struct data_operations *dptr)
+{
 
+  if (!dptr->op_ptr)
+    {
 
-void check_data(struct data_operations *dptr){
- 
-  if (! dptr->op_ptr) {
+      err_type = UNKNOWN_DATATYPE;
 
-    err_type = UNKNOWN_DATATYPE;
-  
-    error();
+      error ();
 
-  }
+    }
 
 }
 
 /* Registering of data Type operation structure */
 
-int register_data(struct object_operations *op_ptr,int dtc) {
+int
+register_data (struct object_operations *op_ptr, int dtc)
+{
 
   /* Register the operations for this data type */
 
   struct data_operations *dptr;
 
-  if (dtc >= DATA_TYPES) 
-     
+  if (dtc >= DATA_TYPES)
+
     {
       err_type = DATA_TYPE_OVERFLOW;
-      error();
+      error ();
     }
 
- 
+
   dptr = &data_operations[dtc];
 
-  dptr->op_ptr = op_ptr; //set up the data operation pointer
+  dptr->op_ptr = op_ptr;	//set up the data operation pointer
 
   return 0;
 
@@ -338,24 +353,28 @@ int register_data(struct object_operations *op_ptr,int dtc) {
 
 /*Initialise the data types before registering */
 
-void initialise_datatypes() {
+void
+initialise_datatypes ()
+{
   struct data_operations *dptr = &data_operations[0];
 
   struct data_operations *traverse;
 
-  for(traverse=dptr; traverse < dptr + DATA_TYPES ; traverse ++ )
-    
-      traverse->op_ptr = (struct object_operations*) NULL;
-    
-}    
+  for (traverse = dptr; traverse < dptr + DATA_TYPES; traverse++)
+
+    traverse->op_ptr = (struct object_operations *) NULL;
+
+}
 
 /*Register all the available data types*/
 
-void register_all_datatypes(void) {
-  
-  register_int(); //register integer operations
-  register_string(); //register string operations
-  register_float(); //register float operations
-  register_double(); //register double operations
+void
+register_all_datatypes (void)
+{
+
+  register_int ();		//register integer operations
+  register_string ();		//register string operations
+  register_float ();		//register float operations
+  register_double ();		//register double operations
 
 }

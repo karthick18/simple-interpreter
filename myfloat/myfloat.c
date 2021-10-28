@@ -23,60 +23,74 @@
 extern Error err_type;
 
 
-struct data *flt_not_op(struct data *a) {
+struct data *
+flt_not_op (struct data *a)
+{
 
   struct data *ptr = (struct data *) NULL;
 
-  if(a->ele_type != _FLT) {
+  if (a->ele_type != _FLT)
+    {
 
-    SET_ERROR(BAD_OPERAND);
+      SET_ERROR (BAD_OPERAND);
 
-  }
+    }
 
   ptr = MALLOC_DATA;
-  if(! ptr) {
-    SET_ERROR(MEM_ERROR);
-  }
+  if (!ptr)
+    {
+      SET_ERROR (MEM_ERROR);
+    }
 
   ptr->ele_type = _FLT;
-  ptr->FLT_PTR = INSTALL_FLOAT(! a->FLT_VALUE);
-  
+  ptr->FLT_PTR = INSTALL_FLOAT (!a->FLT_VALUE);
+
   return ptr;
- 
+
 }
 
 
-struct data *flt_add_op(struct data *a,struct data *b ){
+struct data *
+flt_add_op (struct data *a, struct data *b)
+{
 
   /* A wrapper for int_operate */
 
-  return flt_operate(a,b,PLUS) ;
+  return flt_operate (a, b, PLUS);
 
 }
 
 
-struct data *flt_sub_op(struct data *a,struct data *b ){
+struct data *
+flt_sub_op (struct data *a, struct data *b)
+{
 
-  return flt_operate(a,b,MINUS);
-
-}
-
-struct data *flt_mul_op(struct data *a,struct data *b){
-
-  return flt_operate(a,b,MULTIPLY);
+  return flt_operate (a, b, MINUS);
 
 }
 
-struct data *flt_div_op(struct data *a,struct data *b){
+struct data *
+flt_mul_op (struct data *a, struct data *b)
+{
 
-  return flt_operate(a,b,DIVIDE);
+  return flt_operate (a, b, MULTIPLY);
+
 }
 
-struct data *flt_compare_op(struct data *a,struct data *b,int op){
-  return flt_operate(a,b,op);
+struct data *
+flt_div_op (struct data *a, struct data *b)
+{
+
+  return flt_operate (a, b, DIVIDE);
 }
 
-static struct object_operations operations = { 
+struct data *
+flt_compare_op (struct data *a, struct data *b, int op)
+{
+  return flt_operate (a, b, op);
+}
+
+static struct object_operations operations = {
 
   flt_not_op,
   NULL,
@@ -90,305 +104,325 @@ static struct object_operations operations = {
 };
 
 
-struct data* flt_operate(struct data *a,struct data *b,int op){
+struct data *
+flt_operate (struct data *a, struct data *b, int op)
+{
 
   struct data *ptr = (struct data *) NULL;
 
   struct data_operations *dptr;
 
-  float x,y=0;
+  float x, y = 0;
 
-  if (a->ele_type == _INT) 
+  if (a->ele_type == _INT)
 
     x = (float) a->INT_VALUE;
- 
-  else 
- 
+
+  else
+
     x = a->FLT_VALUE;
 
- 
-  if(b->ele_type == _INT) 
 
-      y = (float)b->INT_VALUE;
+  if (b->ele_type == _INT)
 
-  else if(b->ele_type == _FLT)
- 
-      y = b->FLT_VALUE;
-    
-  switch(b->ele_type) {
+    y = (float) b->INT_VALUE;
+
+  else if (b->ele_type == _FLT)
+
+    y = b->FLT_VALUE;
+
+  switch (b->ele_type)
+    {
 
     case _STR:
 
-      CHECK_DPTR(dptr,_STR);
+      CHECK_DPTR (dptr, _STR);
 
-      switch(op) {
+      switch (op)
+	{
 
-      case PLUS:
-	if (dptr->op_ptr->add_op)
-        	ptr = dptr->op_ptr->add_op(a,b);  
+	case PLUS:
+	  if (dptr->op_ptr->add_op)
+	    ptr = dptr->op_ptr->add_op (a, b);
 
-        else  {
+	  else
+	    {
 
-         SET_ERROR(OPERATION_NOT_SUPPORTED);
+	      SET_ERROR (OPERATION_NOT_SUPPORTED);
 
-        }
-  
-      break;
+	    }
 
-      case MULTIPLY:
- 
-       if(dptr->op_ptr->mul_op)     
-        
-        ptr = dptr->op_ptr->mul_op(a,b);
+	  break;
 
-       else {
+	case MULTIPLY:
 
-        SET_ERROR(OPERATION_NOT_SUPPORTED);
-        
-      }
+	  if (dptr->op_ptr->mul_op)
 
-        break;
+	    ptr = dptr->op_ptr->mul_op (a, b);
 
-      default:
+	  else
+	    {
 
-        SET_ERROR(BAD_OPERATOR);
+	      SET_ERROR (OPERATION_NOT_SUPPORTED);
 
-      }
+	    }
+
+	  break;
+
+	default:
+
+	  SET_ERROR (BAD_OPERATOR);
+
+	}
 
       break;
 
     case _FLT:
-      
-    case _INT:   
+
+    case _INT:
 
       ptr = MALLOC_DATA;
 
-      if(!ptr) {
+      if (!ptr)
+	{
 
-        SET_ERROR(MEM_ERROR);
+	  SET_ERROR (MEM_ERROR);
 
-      }
+	}
       ptr->ele_type = _FLT;
-  
-      switch(op) {
 
-      case PLUS:
-        
-        /* add the two data and get a new data */
-         
-         ptr->FLT_PTR = INSTALL_FLOAT(x+y);
-                     
-        break;
+      switch (op)
+	{
 
-      case MINUS:
+	case PLUS:
 
-          ptr->FLT_PTR = INSTALL_FLOAT(x-y);
+	  /* add the two data and get a new data */
 
-        break;
+	  ptr->FLT_PTR = INSTALL_FLOAT (x + y);
 
-      case MULTIPLY:
+	  break;
 
-         ptr->FLT_PTR = INSTALL_FLOAT(x*y);
+	case MINUS:
 
-     
-        break;
+	  ptr->FLT_PTR = INSTALL_FLOAT (x - y);
 
-      case DIVIDE:
+	  break;
 
-        if(! y)
-       {
+	case MULTIPLY:
 
-           SET_ERROR(DIV_BY_ZERO);
+	  ptr->FLT_PTR = INSTALL_FLOAT (x * y);
 
-        }
 
-        ptr->FLT_PTR = INSTALL_FLOAT(x/y);
-       
-       break;         
+	  break;
 
-      case LT:
- 
-        ptr->FLT_PTR = INSTALL_FLOAT(x<y);
-        break;
-       
-      case GT:
-        ptr->FLT_PTR = INSTALL_FLOAT(x>y);
-        break;
+	case DIVIDE:
 
-      
-      case LTE:
+	  if (!y)
+	    {
 
-        ptr->FLT_PTR = INSTALL_FLOAT(x<=y);
+	      SET_ERROR (DIV_BY_ZERO);
 
-        break;
+	    }
 
-      case GTE:
+	  ptr->FLT_PTR = INSTALL_FLOAT (x / y);
 
-        ptr->FLT_PTR = INSTALL_FLOAT(x>=y);
-        break;
+	  break;
 
-      case EE:
-        ptr->FLT_PTR = INSTALL_FLOAT(x==y);
+	case LT:
 
-        break;
+	  ptr->FLT_PTR = INSTALL_FLOAT (x < y);
+	  break;
 
-      case NE:
+	case GT:
+	  ptr->FLT_PTR = INSTALL_FLOAT (x > y);
+	  break;
 
-        ptr->FLT_PTR = INSTALL_FLOAT(x!=y);
-        break;  
 
-      case LOGICAL_AND:
-        ptr->FLT_PTR = INSTALL_FLOAT(x && y);
-        break;
+	case LTE:
 
-      case LOGICAL_OR:
-        ptr->FLT_PTR = INSTALL_FLOAT(x || y);
-        break;
+	  ptr->FLT_PTR = INSTALL_FLOAT (x <= y);
 
-     default:
-      
-      ptr->FLT_PTR = (struct flt_type*) NULL;
-      deinstall_data(ptr);
+	  break;
 
-      SET_ERROR(BAD_OPERATOR);  
-      
-      }
+	case GTE:
+
+	  ptr->FLT_PTR = INSTALL_FLOAT (x >= y);
+	  break;
+
+	case EE:
+	  ptr->FLT_PTR = INSTALL_FLOAT (x == y);
+
+	  break;
+
+	case NE:
+
+	  ptr->FLT_PTR = INSTALL_FLOAT (x != y);
+	  break;
+
+	case LOGICAL_AND:
+	  ptr->FLT_PTR = INSTALL_FLOAT (x && y);
+	  break;
+
+	case LOGICAL_OR:
+	  ptr->FLT_PTR = INSTALL_FLOAT (x || y);
+	  break;
+
+	default:
+
+	  ptr->FLT_PTR = (struct flt_type *) NULL;
+	  deinstall_data (ptr);
+
+	  SET_ERROR (BAD_OPERATOR);
+
+	}
 
       break;
-       
+
     case _DBL:
 
-      CHECK_DPTR(dptr,_DBL);
+      CHECK_DPTR (dptr, _DBL);
 
-      switch(op) {
+      switch (op)
+	{
 
-      case PLUS:
+	case PLUS:
 
-        if (dptr->op_ptr->add_op) 
- 		ptr = dptr->op_ptr->add_op(a,b);
- 
-        else {
+	  if (dptr->op_ptr->add_op)
+	    ptr = dptr->op_ptr->add_op (a, b);
 
-           SET_ERROR(OPERATION_NOT_SUPPORTED);
+	  else
+	    {
 
-           }
+	      SET_ERROR (OPERATION_NOT_SUPPORTED);
+
+	    }
+
+	  break;
+
+	case MINUS:
+
+	  if (dptr->op_ptr->sub_op)
+	    ptr = dptr->op_ptr->sub_op (a, b);
+
+	  else
+	    {
+
+	      SET_ERROR (OPERATION_NOT_SUPPORTED);
+
+	    }
+
+	  break;
+
+	case MULTIPLY:
+
+	  if (dptr->op_ptr->mul_op)
+	    ptr = dptr->op_ptr->mul_op (a, b);
+
+	  else
+	    {
+
+	      SET_ERROR (OPERATION_NOT_SUPPORTED);
+
+	    }
+
+	  break;
+
+	case DIVIDE:
+
+	  if (dptr->op_ptr->div_op)
+	    ptr = dptr->op_ptr->div_op (a, b);
+
+	  else
+	    {
+
+	      SET_ERROR (OPERATION_NOT_SUPPORTED);
+
+	    }
+
+	  break;
+
+	case LT:
+	case GT:
+	case LTE:
+	case GTE:
+	case EE:
+	case NE:
+	case LOGICAL_AND:
+	case LOGICAL_OR:
+
+	  if (dptr->op_ptr->compare_op)
+	    ptr = dptr->op_ptr->compare_op (a, b, op);
+	  else
+	    {
+	      SET_ERROR (OPERATION_NOT_SUPPORTED);
+	    }
+	  break;
+
+	default:
+
+	  err_type = BAD_OPERATOR;
+
+	  error ();
+
+	}
+
 
       break;
 
-      case MINUS:
+    default:
 
-       if(dptr->op_ptr->sub_op)
-        	ptr = dptr->op_ptr->sub_op(a,b);
+      SET_ERROR (UNKNOWN_DATATYPE);
 
-       else {
+    }				//end outer switch
 
-         SET_ERROR(OPERATION_NOT_SUPPORTED);
+  return ptr;
 
-         }
-
-        break;
-
-      case MULTIPLY :
-
-       if(dptr->op_ptr->mul_op)
-        ptr = dptr->op_ptr->mul_op(a,b);
-
-       else {
-
-        SET_ERROR(OPERATION_NOT_SUPPORTED);
-
-        }
-
-        break;
-
-      case DIVIDE:
-       
-        if(dptr->op_ptr->div_op)
-        ptr = dptr->op_ptr->div_op(a,b);
-  
-        else {
-
-        SET_ERROR(OPERATION_NOT_SUPPORTED);
-
-       }
-
-        break;
-
-      case LT:
-      case GT:
-      case LTE:
-      case GTE:
-      case EE:
-      case NE:
-      case LOGICAL_AND:
-      case LOGICAL_OR:
-      
-        if(dptr->op_ptr->compare_op)
-          ptr=dptr->op_ptr->compare_op(a,b,op);
-        else {
-	  SET_ERROR(OPERATION_NOT_SUPPORTED);
-	}
-	break;      
-    
-      default:
-
-        err_type = BAD_OPERATOR;
-
-        error();
-
-      }
-
- 
-   break;
-
- default:
-
-     SET_ERROR(UNKNOWN_DATATYPE);
-
- } //end outer switch
-
-return ptr;
- 
-} //end routine  
+}				//end routine  
 
 
-struct flt_type *install_float(float value){
+struct flt_type *
+install_float (float value)
+{
 
   struct flt_type *f;
 
-  f = MALLOC_FLT; //allocate an integer object
- 
-  if( !f) 
- 
+  f = MALLOC_FLT;		//allocate an integer object
+
+  if (!f)
+
     {
 
-      SET_ERROR(MEM_ERROR);      
+      SET_ERROR (MEM_ERROR);
 
     }
 
   f->value = value;
 
-  f->flt_ptr = &operations ; //set up the operation pointer
+  f->flt_ptr = &operations;	//set up the operation pointer
 
-  return f; 
+  return f;
 
-}     
+}
 
 
-struct data *deinstall_float(struct data *ptr) {
+struct data *
+deinstall_float (struct data *ptr)
+{
 
-  
-  if( ptr) {
 
-    if(ptr->ele_type == _FLT) {
+  if (ptr)
+    {
 
-    if(ptr->FLT_PTR)
+      if (ptr->ele_type == _FLT)
+	{
 
-      free((void*)ptr->FLT_PTR);  
+	  if (ptr->FLT_PTR)
+
+	    free ((void *) ptr->FLT_PTR);
+
+	}
 
     }
-
-  }
 
   return ptr;
 
@@ -397,17 +431,12 @@ struct data *deinstall_float(struct data *ptr) {
 
 
 
-int register_float(void) {
+int
+register_float (void)
+{
 
   /* Register the data type */
 
-  return register_data(&operations,_FLT);
+  return register_data (&operations, _FLT);
 
 }
-
-
-         
-  
-
-
-

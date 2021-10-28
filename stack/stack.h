@@ -13,52 +13,54 @@
 
 #ifndef _STACK_H
 
-#define _STACK_H 1 
+#define _STACK_H 1
 
 #include <data.h>
 
 #define KB  1024
 
-#define POINTER_LEN (sizeof(unsigned long)) //the length of the pointer is 32 bits for 4 byte machines
+#define POINTER_LEN (sizeof(unsigned long))	//the length of the pointer is 32 bits for 4 byte machines
 
 /* Set up the stack top for a 8kb stack : 2048 stack nodes for a 8 KB stack,each holding 4 byte addresses.*/
 
-#define STACK_TOP (8 * KB)/(POINTER_LEN) 
+#define STACK_TOP (256 * KB)/(POINTER_LEN)
 
-#define STACK_SAFETY 0x8 //set up the stack safety,stop within 8 nodes.
+#define STACK_SAFETY 0x8	//set up the stack safety,stop within 8 nodes.
 
-#define INIT_SC    (sc = STACK_TOP) //initialise the stack counter
+#define INIT_SC    (sc = STACK_TOP)	//initialise the stack counter
 
-#define IS_STACK_OVERFLOW  ( sc < STACK_SAFETY ) //check for stack overflow
+#define IS_STACK_OVERFLOW  ( sc < STACK_SAFETY )	//check for stack overflow
 
-#define IS_STACK_UNDERFLOW  ( sc > STACK_TOP) // check for stack underflow
+#define IS_STACK_UNDERFLOW  ( sc > STACK_TOP)	// check for stack underflow
 
 /*A stack pointer is traced through a stack counter-global variable.*/
 
 #define STACK_PTR    ( &stack[sc] )
 
-#define STACK_DECREMENT  ( --sc )  //decrement a stack:push
+#define STACK_DECREMENT  ( --sc )	//decrement a stack:push
 
-#define STACK_INCREMENT  (++sc)  //increment a stack:  pop
-						
+#define STACK_INCREMENT  (++sc)	//increment a stack:  pop
+
 
 /* The variable Node structure*/
 
-struct variable {
+struct variable
+{
 
-  char *key; //the key for the variable
+  char *key;			//the key for the variable
 
-  struct data *value; //the value for the variable which can be of any type
+  struct data *value;		//the value for the variable which can be of any type
 
 };
 
 /* The stack structure */
 
-struct stack {
+struct stack
+{
 
   struct variable *var;
 
-}; 
+};
 
 
 
@@ -66,29 +68,26 @@ struct stack {
 
 extern struct stack stack[];
 
-extern int sc ; // the stack counter which has to be initialised to STACK_TOP
+extern int sc;			// the stack counter which has to be initialised to STACK_TOP
 
-extern struct stack *stack_frame; //the stack frame pointer for each function.
+extern struct stack *stack_frame;	//the stack frame pointer for each function.
 
-extern void stack_push(struct variable *ptr,unsigned long lookup_stop); //push the variable structure into the stack
+extern void stack_push (struct variable *ptr, unsigned long lookup_stop);	//push the variable structure into the stack
 
-extern struct variable *stack_pop(void); //pop from a stack
+extern struct variable *stack_pop (void);	//pop from a stack
 
 /*Lookup a stack.Should start from the current stack pointer and proceed till the stack frame pointer*/
 
-extern struct stack *stack_trace(char *key,unsigned long lookup_stop);
+extern struct stack *stack_trace (char *key, unsigned long lookup_stop);
 
-extern struct data *stack_lookup(char *key,unsigned long lookup_stop); 
+extern struct data *stack_lookup (char *key, unsigned long lookup_stop);
 
-extern void stack_initialise(void);
+extern void stack_initialise (void);
 
-extern void stack_free(struct variable *var);
+extern void stack_free (struct variable *var);
 
-extern struct variable *var_node();
+extern struct variable *var_node ();
 
-extern void stack_destroy(unsigned long extent);
+extern void stack_destroy (unsigned long extent);
 
-#endif  /* end of stack.h*/
-
-
- 
+#endif /* end of stack.h */

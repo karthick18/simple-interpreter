@@ -7,15 +7,16 @@
 #include<stack.h>
 #include<utils.h>
 #include<data.h>
-#define TOKEN 8 * KB //set it to the stack size
+#define TOKEN 8 * KB		//set it to the stack size
 
 #define MAX_DECIMAL 12
 
 #define SINGLE_QUOTES 047
 #define DOUBLE_QUOTES 042
-#define IS_SIGNED (last_token == EQUAL || last_token == TERMINATOR || last_token == NEWLINE || last_token == END) 
+#define IS_SIGNED (last_token == EQUAL || last_token == TERMINATOR || last_token == NEWLINE || last_token == END)
 
-typedef enum {
+typedef enum
+{
   LOGICAL_NOT,
   ONES_COMPLEMENT,
   MULTIPLY,
@@ -58,16 +59,16 @@ typedef enum {
   REDUCE,
   SHIFT,
   EVALUATE,
-  E1, /* missing left parenthesis*/
-  E2, /*missing right parenthesis*/
-  E3, /*extra left parenthesis*/
-  E4, /*illegal comparison combination*/  
-}Token;
+  E1,				/* missing left parenthesis */
+  E2,				/*missing right parenthesis */
+  E3,				/*extra left parenthesis */
+  E4,				/*illegal comparison combination */
+} Token;
 
 
-extern char  *token_classes[]; //mapping for the tokens
+extern char *token_classes[];	//mapping for the tokens
 
-extern Token current_token ;
+extern Token current_token;
 
 extern Token last_token;
 
@@ -79,12 +80,12 @@ extern char *program;
 
 extern char *reference;
 
-extern int get_token();
+extern int get_token ();
 
-extern int token_info(void);
+extern int token_info (void);
 
-extern int push_back(int);
+extern int push_back (int);
 
-extern void handle_sign(void);
+extern void handle_sign (void);
 
 #endif

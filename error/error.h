@@ -4,7 +4,8 @@
 #include<stdio.h>
 #define NUMBER 3
 
-typedef enum {
+typedef enum
+{
   OK,
   MISSING_SEMI_COLON,
   MISSING_DOUBLE_QUOTES,
@@ -29,9 +30,9 @@ typedef enum {
   BAD_FUNCTION_ARGUMENT,
   FUNCTION_ARGUMENT_MISMATCH,
   SCOPE_REGISTER_ERROR,
-  SCOPE_INSTALL_MISSING, 
+  SCOPE_INSTALL_MISSING,
   SCOPE_LOOKUP_MISSING,
-  SCOPE_UNKNOWN,  
+  SCOPE_UNKNOWN,
   FUNCTION_NOT_FOUND,
   FUNCTION_WITHIN_FUNCTION,
   RETURN_NOT_ALLOWED,
@@ -44,16 +45,16 @@ typedef enum {
   FOR_SYNTAX_ERROR,
   PRINT_FORMAT_MISMATCH,
   PRINT_SYNTAX_ERROR,
-}Error;
+} Error;
 
-extern char *err_values[] ;
+extern char *err_values[];
 
-extern Error err_type; 
+extern Error err_type;
 
-extern void error(void);
+extern void error (void);
 
-extern int count_lines(void);
+extern int count_lines (void);
 
-extern void main_free(void);
+extern void main_free (void);
 
 #endif

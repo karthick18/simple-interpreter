@@ -9,25 +9,30 @@
 #include<arg.h>
 #include<string.h>
 
-extern int do_print(char *buf,const char *fmt,struct argument *arg);
+extern int do_print (char *buf, const char *fmt, struct argument *arg);
 
-extern struct data *my_generic_printf(struct argument *arg,int flag);
+extern struct data *my_generic_printf (struct argument *arg, int flag);
 
-struct intern {
+struct intern
+{
   char *keyword;
-  struct data * (*intern_ptr) (unsigned long,int,int);
+  struct data *(*intern_ptr) (unsigned long, int, int);
 };
 
-extern struct intern *lookup_intern(char *keyword);
+extern struct intern *lookup_intern (char *keyword);
 
-extern struct argument *builtin_handler(unsigned long lookup_stop,int scope);
+extern struct argument *builtin_handler (unsigned long lookup_stop,
+					 int scope);
 
-extern struct data *printf_handler(unsigned long lookup_stop,int scope,int status);
+extern struct data *printf_handler (unsigned long lookup_stop, int scope,
+				    int status);
 
-extern struct data *sprintf_handler(unsigned long lookup_stop,int scope,int status);
+extern struct data *sprintf_handler (unsigned long lookup_stop, int scope,
+				     int status);
 
-extern struct data *output_handler(unsigned long lookup_stop,int scope,int status,int flag);
+extern struct data *output_handler (unsigned long lookup_stop, int scope,
+				    int status, int flag);
 
-int my_strnlen(const char *s,int precision);
+int my_strnlen (const char *s, int precision);
 
 #endif

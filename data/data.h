@@ -1,6 +1,6 @@
 /* Seamless integration of Data */
 
-#ifndef _DATA_H 
+#ifndef _DATA_H
 #define _DATA_H 1
 
 #define DATA_TYPES 0xFF
@@ -17,14 +17,14 @@
 
 #include <utils.h>
 
-typedef enum {
+typedef enum
+{
 
   _INT,
   _FLT,
   _DBL,
   _STR
-
-}DataType;
+} DataType;
 
 
 
@@ -107,7 +107,7 @@ typedef enum {
 
 #define STR_OPERATION_REPLACE STR_OPERATION_STR->str_replace
 
-#define STR_OPERATION_COMPARE STR_OPERATION_STR->str_compare     
+#define STR_OPERATION_COMPARE STR_OPERATION_STR->str_compare
 
 
 /* Typecasting for get_data routine */
@@ -167,19 +167,21 @@ data->ps; \
 /* Define the abstract data type structure */
 
 /* A Seamless integration of data types*/
- 
-struct data {
+
+struct data
+{
 
   DataType ele_type;
 
-  union elements {
+  union elements
+  {
 
     struct int_type *int_type;
     struct flt_type *flt_type;
     struct dbl_type *dbl_type;
     struct str_type *str_type;
 
-  }elements;
+  } elements;
 
 };
 
@@ -188,7 +190,8 @@ struct data {
 /* Each data type need to register their object operations for accesses */
 
 
-struct data_operations {
+struct data_operations
+{
 
   struct object_operations *op_ptr;
 
@@ -196,47 +199,44 @@ struct data_operations {
 
 extern struct data_operations data_operations[DATA_TYPES];
 
-struct object_operations {
+struct object_operations
+{
 
-  struct data * (*not_op) (struct data *a); 
-  
-  struct data * (*ones_complement)(struct data *a);
+  struct data *(*not_op) (struct data * a);
 
-  struct data * (*add_op) (struct data *a,struct data *b); //add operation
- 
-  struct data * (*sub_op) (struct data *a,struct data *b); //sub operation on a data type
+  struct data *(*ones_complement) (struct data * a);
 
-  struct data * (*mul_op) (struct data *a,struct data *b); //mul operation
+  struct data *(*add_op) (struct data * a, struct data * b);	//add operation
 
-  struct data * (*div_op) (struct data *a,struct data *b); //div operation
+  struct data *(*sub_op) (struct data * a, struct data * b);	//sub operation on a data type
 
-  struct data * (*compare_op)(struct data *a,struct data *b,int op); //compare operation
+  struct data *(*mul_op) (struct data * a, struct data * b);	//mul operation
 
-  struct data * (*bit_op) (struct data *a,struct data *b,int op); //bit operations
+  struct data *(*div_op) (struct data * a, struct data * b);	//div operation
+
+  struct data *(*compare_op) (struct data * a, struct data * b, int op);	//compare operation
+
+  struct data *(*bit_op) (struct data * a, struct data * b, int op);	//bit operations
 
   /* The below operations will be string objects */
 
-  struct data * (*find_op)(struct data *in,struct data *find,int index);
+  struct data *(*find_op) (struct data * in, struct data * find, int index);
 
-  struct data * (*replace_op) (struct data *in,struct data *what,struct data *by);
+  struct data *(*replace_op) (struct data * in, struct data * what,
+			      struct data * by);
 
-}; //end of pointer table
+};				//end of pointer table
 
 
 /* Gateway Routines*/
 
-extern struct data *copy_data(struct data *ptr,int sign);
-extern struct data *install_data(struct data *ptr,char *value);
-extern struct data *operate_data(struct data *a,struct data *b,int what);
-extern void deinstall_data(struct data *ptr);
-extern int register_data(struct object_operations *ops,int dt);
-extern void check_data(struct data_operations *dptr);
-extern void initialise_datatypes(void);
-extern void register_all_datatypes(void);
-extern void show_data(struct data *ptr);
+extern struct data *copy_data (struct data *ptr, int sign);
+extern struct data *install_data (struct data *ptr, char *value);
+extern struct data *operate_data (struct data *a, struct data *b, int what);
+extern void deinstall_data (struct data *ptr);
+extern int register_data (struct object_operations *ops, int dt);
+extern void check_data (struct data_operations *dptr);
+extern void initialise_datatypes (void);
+extern void register_all_datatypes (void);
+extern void show_data (struct data *ptr);
 #endif
-
-
-
-
-

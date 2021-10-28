@@ -17,128 +17,135 @@
 #include<keywords.h>
 char *program;
 char *reference;
-int lines,unknown;
+int lines, unknown;
 
-void parse_global_scope();
+void parse_global_scope ();
 
-int main(int argc,char *argv[]) {
+int
+main (int argc, char *argv[])
+{
 
-    program = initialise(argc,argv);
-    if(!program) {
-        err(1,"Terminating the program:\n");
+  program = initialise (argc, argv);
+  if (!program)
+    {
+      err (1, "Terminating the program:\n");
     }
 
-    reference = program ; //set up the global reference pointer for the program
-  
-    initialise_scopes();
-    register_all_scopes(); //register all the scopes
-  
-    initialise_datatypes(); //initialise the data types
-    register_all_datatypes(); //set up the data type handlers
-    stack_initialise();   //set up the stack
+  reference = program;		//set up the global reference pointer for the program
 
-    lval_initialise(); //initialise the lvalue handler
+  initialise_scopes ();
+  register_all_scopes ();	//register all the scopes
 
-    function_precursor(); //call function precursor to load functions
+  initialise_datatypes ();	//initialise the data types
+  register_all_datatypes ();	//set up the data type handlers
+  stack_initialise ();		//set up the stack
 
-    reference = program;
+  lval_initialise ();		//initialise the lvalue handler
 
-    parse_global_scope();
+  function_precursor ();	//call function precursor to load functions
 
-    main_free(); //free up the memory
- 
-    exit(0);
+  reference = program;
+
+  parse_global_scope ();
+
+  main_free ();			//free up the memory
+
+  exit (0);
 
 }
 
-void parse_global_scope() {
-  
+void
+parse_global_scope ()
+{
+
   int loop_flag = OFF;
 
   extern Token current_token;
-  
-  char *tail = program + strlen(program);
 
-  *tail++ = '\n' ; 
- 
-  *tail++ = '}'  ;
- 
+  char *tail = program + strlen (program);
+
+  *tail++ = '\n';
+
+  *tail++ = '}';
+
   *tail = '\0';
 
-  current_token = LB; //set up the current_token
+  current_token = LB;		//set up the current_token
 
-  err(0,"Launching the Syntax Checker:\n");
+  err (0, "Launching the Syntax Checker:\n");
 
-  block_parser((unsigned long)0,_GL_SCOPE,0,0,&loop_flag); //run the syntax checker
-  
-  reference = program ; //reset for the program parser
+  block_parser ((unsigned long) 0, _GL_SCOPE, 0, 0, &loop_flag);	//run the syntax checker
+
+  reference = program;		//reset for the program parser
 
   current_token = LB;
 
-  block_parser((unsigned long)0,_GL_SCOPE,0,1,&loop_flag); //run the parser 
-  
-}
-
-void show_data(struct data *ptr) { 
-
- if(ptr ) 
-  {
-     switch(ptr->ele_type) { 
-
-        case _INT:
-
-              err(0,"The value of the Integer Object is %d:\n",ptr->INT_VALUE);
-              break;
-
-        case _FLT:
-
-              err(0,"The value of the Float Object is %.2f:\n",ptr->FLT_VALUE);
-              break;
-
-        case _DBL:
-              
-              err(0,"The value of the Double Object is %.2f:\n",ptr->DBL_VALUE);
-              break;
-
-           
-        case _STR:
-
-              err(0,"The value of the string object is %s\n",ptr->STR_VALUE);
-
-              break;
-
-         default:
-
-              err(0,"Unknown Data Type:\n");
-
-              main_free();
-
-             }
-
-  }
-
+  block_parser ((unsigned long) 0, _GL_SCOPE, 0, 1, &loop_flag);	//run the parser 
 
 }
 
-void main_free() {
+void
+show_data (struct data *ptr)
+{
+
+  if (ptr)
+    {
+      switch (ptr->ele_type)
+	{
+
+	case _INT:
+
+	  err (0, "The value of the Integer Object is %d:\n", ptr->INT_VALUE);
+	  break;
+
+	case _FLT:
+
+	  err (0, "The value of the Float Object is %.2f:\n", ptr->FLT_VALUE);
+	  break;
+
+	case _DBL:
+
+	  err (0, "The value of the Double Object is %.2f:\n",
+	       ptr->DBL_VALUE);
+	  break;
+
+
+	case _STR:
+
+	  err (0, "The value of the string object is %s\n", ptr->STR_VALUE);
+
+	  break;
+
+	default:
+
+	  err (0, "Unknown Data Type:\n");
+
+	  main_free ();
+
+	}
+
+    }
+
+
+}
+
+void
+main_free ()
+{
 
   extern struct stack stack[];
-   
-  unsigned long extent = (unsigned long)&stack[STACK_TOP];
 
-    stack_destroy(extent); //destroy the stack
-    lval_destroy();
-    traverse_fun(); //display the functions
-    fun_destroy();
-    global_destroy();
+  unsigned long extent = (unsigned long) &stack[STACK_TOP];
 
-    if(program) 
-         free((void*)program);
+  stack_destroy (extent);	//destroy the stack
+  lval_destroy ();
+  traverse_fun ();		//display the functions
+  fun_destroy ();
+  global_destroy ();
 
-    err(1,"Freed up the memory.Wrapping up Main:\n");
+  if (program)
+    free ((void *) program);
 
-    }                 
+  err (1, "Freed up the memory.Wrapping up Main:\n");
 
-     
-       
-    
+}

@@ -6,7 +6,7 @@
 #ifndef _SCOPE_H
 #define _SCOPE_H 1
 
-#define SCOPES 2  //stack and global:
+#define SCOPES 2		//stack and global:
 #include <data.h>
 #include <stack.h>
 #include <utils.h>
@@ -14,7 +14,8 @@
 #define _ST_SCOPE 0
 #define _GL_SCOPE 1
 
-struct scope {
+struct scope
+{
 
   struct scope_operations *scope_ptr;
 
@@ -24,15 +25,16 @@ struct scope {
 
  */
 
-struct scope_operations {
+struct scope_operations
+{
 
-  /* Install a variable into a scope given the extent of scope_lookups*/
+  /* Install a variable into a scope given the extent of scope_lookups */
 
-  void (*scope_install)(struct variable *var,unsigned long lookup_stop);
+  void (*scope_install) (struct variable * var, unsigned long lookup_stop);
 
   /* Look up the variables in the scopes. The lookups will be called from the scope start to the outer scopes */
 
-  struct data * (*scope_lookup) (char *key,unsigned long lookup_stop);
+  struct data *(*scope_lookup) (char *key, unsigned long lookup_stop);
 
 };
 
@@ -40,21 +42,22 @@ struct scope_operations {
 
 /* Declaration of scope dependent variables and routines */
 
-extern struct scope scope[]; //a scope instance
+extern struct scope scope[];	//a scope instance
 
-extern void initialise_scopes(void); //initialise the scope
+extern void initialise_scopes (void);	//initialise the scope
 
-extern void register_stack_scope(void);
+extern void register_stack_scope (void);
 
-extern void register_global_scope(void);
+extern void register_global_scope (void);
 
-extern void register_all_scopes(void); //register all the scope methods
+extern void register_all_scopes (void);	//register all the scope methods
 
-extern void register_scope(int scope,struct scope_operations *ptr);
+extern void register_scope (int scope, struct scope_operations *ptr);
 
-extern struct data *lookup_scopes (char *key,unsigned long lookup_stop,int scope_start);
+extern struct data *lookup_scopes (char *key, unsigned long lookup_stop,
+				   int scope_start);
 
-extern void install_scopes(struct variable *var,unsigned long lookup_stop,int scope);
+extern void install_scopes (struct variable *var, unsigned long lookup_stop,
+			    int scope);
 
 #endif
- 
